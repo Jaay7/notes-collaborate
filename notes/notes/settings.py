@@ -74,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "notes.wsgi.application"
+WSGI_APPLICATION = "notes.wsgi.app"
 
 
 # Database
