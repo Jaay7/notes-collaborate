@@ -10,8 +10,3 @@ class NoteCreationForm(forms.ModelForm):
     class Meta:
         model = models.Note
         fields = ['title', 'content']
-
-class NoteUpdateForm(forms.ModelForm):
-    class Meta:
-        model = models.Note
-        fields = ['title', 'content']

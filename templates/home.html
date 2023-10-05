@@ -15,6 +15,12 @@
         : document.getElementById("drop-menu").classList.add("hidden");
     }
   </script>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap");
+    body {
+      font-family: "Inter", sans-serif;
+    }
+  </style>
   <body class="h-full">
     <div class="bg-white py-10 sm:py-12">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
@@ -105,7 +111,7 @@
               <time class="text-gray-500">{{ note.created_at }}</time>
               <a
                 href="#"
-                class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
+                class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100 truncate"
                 >Collection Name</a
               >
             </div>
@@ -118,7 +124,7 @@
                   {{ note.title }}
                 </a>
               </h3>
-              <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600 break-words">
+              <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600 break-all">
                 {{ note.content }}
               </p>
             </div>

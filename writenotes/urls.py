@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('create_note/', views.create_note, name='create_note'),
-    path('update_note/<int:nid>/', views.update_note, name='update_note'),
+    # path('update_note/<int:nid>/', views.update_note, name='update_note'),
     path('note/<int:nid>/', views.get_individual_note, name='note'),
     path('delete_note/<int:nid>/', views.delete_note, name='delete_note'),
     path('create_collection/', views.create_collection, name='create_collection'),

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from . import forms, models
@@ -17,22 +17,39 @@ def create_note(request):
         form = forms.NoteCreationForm()
     return render(request, "notes/create_note.html", {'form': form})
 
-@login_required
-def update_note(request, nid):
-    note = models.Note.objects.get(nid=nid)
-    if request.method == "POST":
-        form = forms.NoteUpdateForm(request.POST, instance=note)
-        if form.is_valid():
-            form.save()
-            return redirect("home")
-    else:
-        form = forms.NoteUpdateForm(instance=note)
-    return render(request, "notes/update_note.html", {'form': form})
+# @login_required
+# def update_note(request, nid):
+#     note = models.Note.objects.get(nid=nid)
+#     note.title = request.POST['title']
+#     note.content = request.POST['content']
+#     note.collaborators.add(request.POST['collaborators'] or [])
+#     note.collection.add(request.POST['collection'] or [])
+#     note.save()
+#     return HttpResponse("success")
+
 
 @login_required
 def get_individual_note(request, nid):
     note = models.Note.objects.get(nid=nid)
-    return render(request, "notes/note.html", {'note': note})
+    final_note = {
+        'nid': note.nid,
+        'title': note.title,
+        'content': note.content,
+        'created_at': note.created_at,
+        'updated_at': note.updated_at,
+        'author': note.author,
+        'collaborators': note.collaborators.all() or "No collaborators",
+        'collection': note.collection.all() or "Not added into any collection",
+    }
+    if request.method == "POST":
+        note.title = request.POST['title']
+        note.content = request.POST['content']
+        # note.collaborators.add(request.POST['collaborators'] or [])
+        # note.collection.add(request.POST['collection'] or [])
+        note.save()
+        messages.success(request, 'Note updated - {0}.'.format(note.title))
+        return redirect(request.META['HTTP_REFERER'])
+    return render(request, "notes/note.html", {'note': final_note})
 
 @login_required
 def delete_note(request, nid):
