@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from . import forms, models
+from users import models as user_models
 
 # Create your views here.
 @login_required
@@ -31,6 +32,7 @@ def create_note(request):
 @login_required
 def get_individual_note(request, nid):
     note = models.Note.objects.get(nid=nid)
+    users = user_models.User.objects.all()
     final_note = {
         'nid': note.nid,
         'title': note.title,
@@ -44,12 +46,16 @@ def get_individual_note(request, nid):
     if request.method == "POST":
         note.title = request.POST['title']
         note.content = request.POST['content']
+        collabs = request.POST.getlist('users[]')
+        note.collaborators.clear()
+        for user_id in collabs:
+            note.collaborators.add(user_models.User.objects.get(id=user_id))
         # note.collaborators.add(request.POST['collaborators'] or [])
         # note.collection.add(request.POST['collection'] or [])
         note.save()
         messages.success(request, 'Note updated - {0}.'.format(note.title))
         return redirect(request.META['HTTP_REFERER'])
-    return render(request, "notes/note.html", {'note': final_note})
+    return render(request, "notes/note.html", {'note': final_note, 'users': users})
 
 @login_required
 def delete_note(request, nid):
@@ -57,18 +63,18 @@ def delete_note(request, nid):
     note.delete()
     return redirect("home")
 
-@login_required
-def create_collection(request):
-    if request.method == "POST":
-        form = forms.NoteCollectionCreationForm(request.POST)
-        if form.is_valid():
-            collection = form.save(commit=False)
-            collection.author = request.user
-            collection.save()
-            return redirect("home")
-    else:
-        form = forms.NoteCollectionCreationForm()
-    return render(request, "notes/create_collection.html", {'form': form})
+# @login_required
+# def create_collection(request):
+#     if request.method == "POST":
+#         form = forms.NoteCollectionCreationForm(request.POST)
+#         if form.is_valid():
+#             collection = form.save(commit=False)
+#             collection.author = request.user
+#             collection.save()
+#             return redirect("home")
+#     else:
+#         form = forms.NoteCollectionCreationForm()
+#     return render(request, "notes/create_collection.html", {'form': form})
 
 @login_required
 def delete_collection(request, cid):

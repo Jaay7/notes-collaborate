@@ -1,0 +1,40 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [
+    {
+      "name": "pip install -r requirements.txt",
+      "command": "pip install -r requirements.txt"
+    }
+  ],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "start": {
+      "name": "start",
+      "command": "python manage.py runserver 0.0.0.0:8000",
+      "runAtStart": true,
+      "preview": {
+        "port": 8000
+      }
+    },
+    "make-migrations": {
+      "name": "start",
+      "command": "python manage.py makemigrations"
+    },
+    "migrate": {
+      "name": "start",
+      "command": "python manage.py migrate"
+    },
+    "install-dependencies": {
+      "name": "Installing Dependencies",
+      "command": "pip install -r requirements.txt",
+      "restartOn": {
+        "files": [
+          "requirements.txt"
+        ],
+        "branch": false,
+        "resume": false
+      }
+    }
+  }
+}

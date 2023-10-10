@@ -189,7 +189,11 @@
                 <dd
                   class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
                 >
-                  {{ note.collaborators }}
+                  <select name="users[]" multiple>
+                    {% for user in users %}
+                      <option value="{{ user.id }}">{{ user.username }}</option>
+                    {% endfor %}
+                  </select>
                 </dd>
               </div>
             </dl>

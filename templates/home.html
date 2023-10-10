@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+    />
     <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
     <title>Home</title>
   </head>
@@ -13,6 +17,21 @@
       bool
         ? document.getElementById("drop-menu").classList.remove("hidden")
         : document.getElementById("drop-menu").classList.add("hidden");
+    }
+
+    function openModal() {
+      document.getElementById("collection-modal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("collection-modal").classList.add("hidden")
+    }
+
+    window.onclick = function(event) {
+      if(event.target == document.getElementById("collection-modal")) {
+        document.getElementById("collection-modal").classList.add("hidden");
+        console.log("event emitted");
+      }
     }
   </script>
   <style>
@@ -81,13 +100,13 @@
                     id="menu-item-0"
                     >Note</a
                   >
-                  <a
-                    href="#"
+                  <button
+                    type="button"
                     class="text-gray-700 block px-4 py-2 text-sm"
                     role="menuitem"
                     tabindex="-1"
-                    id="menu-item-1"
-                    >Collection</a
+                    onclick="openModal()"
+                    >Collection</button
                   >
                 </div>
               </div>
@@ -133,6 +152,82 @@
         </div>
       </div>
     </div>
+    <div id="collection-modal" class="hidden relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <!--
+        Background backdrop, show/hide based on modal state.
+    
+        Entering: "ease-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+    
+      <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <!--
+            Modal panel, show/hide based on modal state.
+    
+            Entering: "ease-out duration-300"
+              From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              To: "opacity-100 translate-y-0 sm:scale-100"
+            Leaving: "ease-in duration-200"
+              From: "opacity-100 translate-y-0 sm:scale-100"
+              To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          -->
+          <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+            <form action="" method="post">
+              {% csrf_token %}
+            <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+              <div class="sm:flex sm:items-start">
+                <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
+                  <div class="h-6 w-6 text-indigo-600">
+                    <span class="material-icons-outlined">create_new_folder</span>
+                  </div>
+                </div>
+                <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                  <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Create collection</h3>
+                  <div class="mt-2">
+                      <div
+                        class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+                      >
+                        <input
+                          type="text"
+                          name="title"
+                          id="title"
+                          class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                          placeholder="New title"
+                        />
+                      </div>
+                  </div>
+                  <div class="mt-2">
+                    <div
+                      class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+                    >
+                      <input
+                        type="text"
+                        name="description"
+                        id="description"
+                        class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        placeholder="Describe it"
+                      />
+                    </div>
+                </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <button type="submit" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto">Create</button>
+              <button onclick="closeModal()" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 
     <!-- <h2>Welcome, {{ user.username }}</h2>
     <p>Your email: {{ user.email }}</p>
