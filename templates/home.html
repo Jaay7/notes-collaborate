@@ -44,7 +44,7 @@
     <div class="bg-white py-10 sm:py-12">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div
-          class="mx-auto max-w-full lg:mx-0 flex flex-row justify-between items-center"
+          class="mx-auto max-w-full lg:mx-0 flex max-[400px]:flex-col flex-row justify-between items-center max-[400px]:items-start"
         >
           <div>
             <h2
@@ -53,10 +53,10 @@
               Hi {{ user.username }},
             </h2>
             <p class="mt-1 text-md leading-6 text-gray-600">
-              Here goes your notes.
+              Here goes your items.
             </p>
           </div>
-          <div class="flex">
+          <div class="flex max-[400px]:mt-3">
             <div class="relative inline-block text-left">
               <div>
                 <button
@@ -119,20 +119,28 @@
             >
           </div>
         </div>
+        <div class="mx-auto mt-4 max-w-2xl grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-x-8 gap-y-16 border-t border-gray-200 pt-6 sm:mt-6 sm:pt-8 lg:mx-0 lg:max-w-none">
+          {% for collection in collections %}
+          <a href="{% url 'get_collection' collection.cid %}" class="group max-w-lg p-4 bg-slate-50 border border-slate-100 rounded-md">
+            <h3
+                class="text-md font-semibold leading-6 text-gray-900 group-hover:text-gray-600"
+              >
+                <p>
+                  {{ collection.title }}
+                </p>
+              </h3>
+          </a>
+          {% endfor %}
+        </div>
         <div
-          class="mx-auto mt-4 max-w-2xl grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-x-8 gap-y-16 border-t border-gray-200 pt-6 sm:mt-6 sm:pt-8 lg:mx-0 lg:max-w-none"
+          class="mx-auto mt-4 max-w-2xl grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-x-8 gap-y-16 pt-6 sm:mt-6 sm:pt-8 lg:mx-0 lg:max-w-none"
         >
           {% for note in notes %}
           <article
-            class="flex max-w-xl flex-col items-start justify-start bg-slate-50 p-3 rounded-md"
+            class="flex max-w-xl flex-col items-start justify-start border border-slate-100 p-3 rounded-md"
           >
             <div class="flex items-center gap-x-4 text-xs">
               <time class="text-gray-500">{{ note.created_at }}</time>
-              <a
-                href="#"
-                class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100 truncate"
-                >Collection Name</a
-              >
             </div>
             <div class="group relative">
               <h3
@@ -153,43 +161,28 @@
       </div>
     </div>
     <div id="collection-modal" class="hidden relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <!--
-        Background backdrop, show/hide based on modal state.
-    
-        Entering: "ease-out duration-300"
-          From: "opacity-0"
-          To: "opacity-100"
-        Leaving: "ease-in duration-200"
-          From: "opacity-100"
-          To: "opacity-0"
-      -->
       <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
     
       <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-          <!--
-            Modal panel, show/hide based on modal state.
-    
-            Entering: "ease-out duration-300"
-              From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              To: "opacity-100 translate-y-0 sm:scale-100"
-            Leaving: "ease-in duration-200"
-              From: "opacity-100 translate-y-0 sm:scale-100"
-              To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          -->
           <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
             <form action="" method="post">
               {% csrf_token %}
             <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-              <div class="sm:flex sm:items-start">
+              <div class="sm:flex flex-col sm:items-center">
                 <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
                   <div class="h-6 w-6 text-indigo-600">
                     <span class="material-icons-outlined">create_new_folder</span>
                   </div>
                 </div>
-                <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                  <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Create collection</h3>
-                  <div class="mt-2">
+                <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Create collection</h3>
+                <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+                  <div class="sm:col-span-4">
+                    <label
+                    for="title"
+                    class="block text-sm font-medium leading-6 text-gray-900"
+                    >Title</label>
+                    <div class="mt-2">
                       <div
                         class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
                       >
@@ -201,20 +194,28 @@
                           placeholder="New title"
                         />
                       </div>
-                  </div>
-                  <div class="mt-2">
-                    <div
-                      class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
-                    >
-                      <input
-                        type="text"
-                        name="description"
-                        id="description"
-                        class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                        placeholder="Describe it"
-                      />
                     </div>
-                </div>
+                  </div>
+                  <div class="col-span-full">
+                    <label
+                      for="description"
+                      class="block text-sm font-medium leading-6 text-gray-900"
+                      >Description</label
+                    >
+                    <div class="mt-2">
+                      <div
+                        class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+                      >
+                        <input
+                          type="text"
+                          name="description"
+                          id="description"
+                          class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                          placeholder="Describe it"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

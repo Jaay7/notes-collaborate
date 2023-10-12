@@ -57,6 +57,7 @@ def home(request):
     """Home page"""
     user = request.user
     notes = models.Note.objects.get_queryset().filter(author=user)
+    collections = models.NoteCollection.objects.get_queryset().filter(author=user)
     if request.method == "POST":
         form = forms.NoteCollectionCreationForm(request.POST)
         if form.is_valid():
@@ -64,4 +65,4 @@ def home(request):
             collection.author = request.user
             collection.save()
             return redirect(request.META['HTTP_REFERER'])
-    return render(request, 'home.html', {'user': user, 'notes': notes})
+    return render(request, 'home.html', {'user': user, 'notes': notes, 'collections': collections})

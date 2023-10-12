@@ -109,7 +109,16 @@
               <dd
                 class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
               >
-                {{ note.collection }}
+                {% load util %}
+                {% if note.collection|get_type %}
+                  <p>{{ note.collection }}</p>
+                  {% else %}
+                  <div class="relative items-center gap-2 text-xs flex-wrap flex">
+                  {% for col in note.collection %}
+                    <span class="relative z-10 rounded-full bg-indigo-50 px-3 py-1.5 font-medium text-gray-900 ring-1 ring-inset ring-indigo-500/10">{{ col.title }}</span>
+                  {% endfor %}
+                  </div>
+                {% endif %}
               </dd>
             </div>
             <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -119,7 +128,16 @@
               <dd
                 class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
               >
-                {{ note.collaborators }}
+                {% load util %}
+                {% if note.collaborators|get_type %}
+                  <p>{{ note.collaborators }}</p>
+                  {% else %}
+                  <div class="relative items-center gap-2 text-xs flex-wrap flex">
+                  {% for collab in note.collaborators %}
+                    <span class="relative z-10 rounded-full bg-indigo-50 px-3 py-1.5 font-medium text-gray-900 ring-1 ring-inset ring-indigo-500/10">{{ collab.username }}</span>
+                  {% endfor %}
+                  </div>
+                {% endif %}
               </dd>
             </div>
           </dl>
@@ -179,7 +197,11 @@
                 <dd
                   class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
                 >
-                  {{ note.collection }}
+                  <select name="collections[]" multiple>
+                    {% for collection in collections %}
+                      <option value="{{ collection.cid }}">{{ collection.title }}</option>
+                    {% endfor %}
+                  </select>
                 </dd>
               </div>
               <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
